@@ -1,5 +1,5 @@
 ### Hi there 👋
-
+![](https://github.com/Platane/snk/raw/output/github-contribution-grid-snake.svg)
 <!--
 **dotennin/dotennin** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
