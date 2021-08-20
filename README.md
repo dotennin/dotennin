@@ -1,4 +1,3 @@
-### Hi there 👋
 ![](https://raw.githubusercontent.com/dotennin/dotennin/main/github-user-contribution.svg)
 <!--
 **dotennin/dotennin** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
