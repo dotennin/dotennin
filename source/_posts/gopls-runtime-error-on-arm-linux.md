@@ -2,8 +2,8 @@
 title: gopls runtime error on arm linux
 date: 2021-08-17 01:13:15
 tags:
-  - GO
-  - SHELL
+  - Go
+  - Shell
 ---
 
 ```shell
