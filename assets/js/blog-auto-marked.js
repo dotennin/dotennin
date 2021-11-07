@@ -37,4 +37,3 @@ function handleMarkDownTask() {
 }
 
 document.addEventListener('DOMContentLoaded', handleMarkDownTask)
-console.log('hello cache is working')
