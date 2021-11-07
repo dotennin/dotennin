@@ -17,9 +17,8 @@ function handleMarkDownTask() {
 								var converted = document.createElement('div');
 					if(mdEl.value){
 						converted.innerHTML = marked.parse(mdEl.value);
-				converted.innerHTML = converted.innerHTML.replace(/<pre>/gi, "<pre style='background: #e8e4e4;padding: 8px 16px;border-radius: 4px;'>");
-						console.log('</pre>', '</pre>');
-									mdEl.parentNode.replaceChild(converted, mdEl);
+						converted.innerHTML = converted.innerHTML.replace(/<pre>/gi, "<pre style='background: #e8e4e4;padding: 8px 16px;border-radius: 4px;'>");
+						mdEl.parentNode.replaceChild(converted, mdEl);
 					}
 						}
 						if (oldHref != document.location.href) {
