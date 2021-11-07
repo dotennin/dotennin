@@ -19,7 +19,7 @@ jobs:
         # Set outputs using the command.
         run: |
           echo "::set-output name=all::$(git diff --name-only HEAD^..HEAD | grep -i 'assets/' | xargs)"
-  lint:
+  purgeCache:
     runs-on: ubuntu-latest
     # require the first job to have ran
     needs: changedfiles
@@ -28,7 +28,10 @@ jobs:
     steps:
       - name: echo changed files
         run: echo ${{needs.changedfiles.outputs.all}}
-      - name: checkout repository
-        uses: actions/checkout@v2
       - name: eval purge jsdelivr cache
-        run: .github/workflows/purge-jsdelivr-cache.sh ${{needs.changedfiles.outputs.all}}
+        run: |
+          branch_name=$(echo ${{ github.ref }} | sed 's/refs\/heads\///')
+          for file in ${{needs.changedfiles.outputs.all}}
+          do
+            curl "https://purge.jsdelivr.net/gh/${{ github.repository }}@$branch_name/$file"
+          done
