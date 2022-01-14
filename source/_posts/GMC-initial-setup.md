@@ -1,8 +1,7 @@
 ---
 title: GMC initial setup
 date: 2022-01-15 00:41:13
-tags:
-GMC
+tags: GMC
 ---
 
 ## Initial setup
