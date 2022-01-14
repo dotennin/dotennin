@@ -1,6 +1,7 @@
 ---
 title: GMC initial setup
 date: 2022-01-15 00:41:13
+thumbnail: http://www.etrendtalk.com/wp-content/uploads/2021/10/Google-merchant-center.png
 tags: GMC
 ---
 
