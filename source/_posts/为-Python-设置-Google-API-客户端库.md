@@ -42,4 +42,4 @@ tags: GMC
    pip install -r requirements.txt
    ```
 
-### 现在已经配置好了 Python API 客户, 接下来可以和`the Content API`一起使用。
+### 现在已经配置好了 Python API 客户端, 接下来可以和`the Content API`一起进行 API 调用。
