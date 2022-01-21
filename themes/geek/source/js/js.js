@@ -6,8 +6,9 @@ new Valine({
     el: '#vcomments',
     appId: valine_appid,
     appKey: valine_appKey,
-    placeholder: '请输入内容...',
-    avatar: "wavatar"
+    placeholder: 'Please Enter...',
+    avatar: "wavatar",
+    lang: 'en',
 })
 
 document.addEventListener('DOMContentLoaded', (event) => {
