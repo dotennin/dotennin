@@ -1,21 +1,29 @@
 ---
 title: 解决Worker 同源问题
-date: 2020-10-15 22:42:15
+date: 2021-02-08 22:42:15
 tags:
-  - Web Worker
+  - Shell
 ---
 
-<textarea border-style:dotted="border-style:dotted" class="markdown" disabled="disabled" style="height: 322px; margin: 0px; width: 369px;"> 
-## 解决方法：
-1. 将动态生成的脚本转换成Blob对象。
-2. 然后给这个Blob对象创建一个URL。
-3. 最后将这个创建好的URL作为地址传给Worker的构造函数。
-  
+<textarea border-style:dotted="border-style:dotted" class="markdown" disabled="disabled">  
+  # 例如，如果您想让Chef为未打包的应用程序使用交互式安装程序，则此方法很有用。与Chef一起使用此方法时，有必要通过安装后是否存在可执行文件来保持幂等性。
+  -----------------
+## 安装expect工具：
+1. expect
+2. autoexpect
+-------------
+### 环境准备
 ```
-let script = 'console.log("hello world!");'
-let workerBlob = new Blob([script], { type: "text/javascript" });
-let url = URL.createObjectURL(workerBlob);
-let worker = new Worker(url);
+  sudo yum install expect autoexpect
 ```
-
+### expect脚本生成
+```
+  autoexpect sudo ./<输出文件>
+```
+----------------
+### 自动安装
+```
+  chmod +x script.exp
+  sudo ./script.exp
+  ```
 </textarea>
