@@ -1,6 +1,6 @@
 ---
 title: WebAssemblyでC言語を動いてみた
-date: 2022-10-30 23:20:53
+date: 2019-11-01 23:20:53
 tags:
   - WebAssembly
   - Javascript
