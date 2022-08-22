@@ -1,6 +1,6 @@
 ---
 title: GoldleafでUSB経由でnspをインストール
-date: 2022-08-22 22:29:55
+date: 2020-04-22 22:29:55
 tags:
 ---
 
