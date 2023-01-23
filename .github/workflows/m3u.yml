@@ -15,6 +15,7 @@ jobs:
       CI_COMMIT_AUTHOR: "github-actions[bot]"
       CI_COMMIT_EMAIL: "41898282+github-actions[bot]@users.noreply.github.com"
     runs-on: ubuntu-22.04
+    continue-on-error: true
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v3
@@ -26,8 +27,8 @@ jobs:
          curl http://m3u4u.com/m3u/m/qgkjpnm22ebvmmn8ey79 > tv.m3u
          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
          git config --global user.email "${{ env.CI_COMMIT_EMAIL }}"
-         git add tv.m3u
-         git commit -a -m "${{ env.CI_COMMIT_MESSAGE }}"
+         git add .
+         git commit -m "${{ env.CI_COMMIT_MESSAGE }}"
          git push
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
