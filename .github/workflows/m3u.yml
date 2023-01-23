@@ -4,9 +4,12 @@ on:
   # “At every 5th minute.”
   schedule:
     - cron: "*/5 * * * *" 
-  
   # allows to manually run the job at any time
   workflow_dispatch:
+  # run on every push on the master branch
+  push:
+    branches:
+    - main
 
 jobs:
   generate-m3u:
