@@ -1,0 +1,30 @@
+name: Daily requests
+
+on:
+  schedule:
+    # runs at 02:00 every day with UTC time
+    - cron: '0 2 * * *'
+
+jobs:
+  curl_job:
+    runs-on: ubuntu-latest
+    steps:
+    - name: sign-in 4k world
+      run: 
+        curl 'https://www.4ksj.com/qiandao.php?sign=45ecf8f1' \
+        -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
+        -H 'accept-language: ja-JP,ja;q=0.9,zh-CN;q=0.8,zh;q=0.7,en-US;q=0.6,en;q=0.5' \
+        -H 'cache-control: no-cache' \
+        -H 'cookie: e7b359db1ec7de7174401b902b2d4300=48ce6f0b387e5492b24bc277c7ed3624; HxHg_2132_saltkey=akQN6v33; HxHg_2132_lastvisit=1721463353; HxHg_2132_sendmail=1; HxHg_2132_ulastactivity=1721466962%7C0; HxHg_2132_auth=94a7R0PlNrZwbB99iscg1Mz8VZ2STxGTYjnqqmpvd9XD8Cr1j00YEbOtk%2F6GlR5bIt2rDiLiiwmA0q71Q63YpHqFWYpg; HxHg_2132_lastcheckfeed=1257152%7C1721466962; HxHg_2132_lip=209.17.84.163%2C1721466962; HxHg_2132_myrepeat_rr=R0; HxHg_2132_sid=0; HxHg_2132_secqaaqS0=14793.1a9d84caaf7dc4907b; HxHg_2132_home_diymode=1; HxHg_2132_st_p=1257152%7C1721467062%7Cd2e5db20bed9bc1c0fd7b34a479d5dfd; HxHg_2132_visitedfid=44D2; HxHg_2132_viewid=tid_284; HxHg_2132_creditnotice=0D0D0D0D1D0D0D0D0D1257152; HxHg_2132_creditbase=0D0D1D0D12D0D0D0D0; HxHg_2132_creditrule=%CC%EC%CC%EC%B4%F2%BF%A8; HxHg_2132_zqlj_sign_1257152=20240720; HxHg_2132_will_timelogout_1257152=1721467100; HxHg_2132_checkpm=1; HxHg_2132_lastact=1721467100%09misc.php%09patch' \
+        -H 'pragma: no-cache' \
+        -H 'priority: u=0, i' \
+        -H 'referer: https://www.4ksj.com/qiandao.php' \
+        -H 'sec-ch-ua: "Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"' \
+        -H 'sec-ch-ua-mobile: ?0' \
+        -H 'sec-ch-ua-platform: "macOS"' \
+        -H 'sec-fetch-dest: document' \
+        -H 'sec-fetch-mode: navigate' \
+        -H 'sec-fetch-site: same-origin' \
+        -H 'sec-fetch-user: ?1' \
+        -H 'upgrade-insecure-requests: 1' \
+        -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
