@@ -5,7 +5,7 @@ style: white
 favicon: /favicon.ico
 
 menu:
-  about: /about
+  about: /about.html
   Github: https://github.com/dotennin
 
 # 做了域名限制，请改成自己的 KEY
