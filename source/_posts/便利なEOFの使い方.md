@@ -1,8 +1,7 @@
 ---
 title: 便利なEOFの使い方
 date: 2022-10-29 10:53:42
-tags:
-Shell
+tags: Shell
 ---
 
 <h2 style="background-color: white; border-bottom: 1px solid rgb(221, 221, 221); box-sizing: inherit; color: #333333; cursor: pointer; font-family: -apple-system, &quot;Segoe UI&quot;, &quot;Helvetica Neue&quot;, &quot;Hiragino Kaku Gothic ProN&quot;, メイリオ, meiryo, sans-serif; font-feature-settings: &quot;palt&quot;; font-size: 1.6em; line-height: 1.5; margin: 2.2em 0px 2.4rem; padding: 0px 0px 0.1em; position: relative;">
