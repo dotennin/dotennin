@@ -1,0 +1,789 @@
+---
+title: 汐入公園3時間耐力リレー - チーム編成
+layout: default
+---
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>汐入公園3時間耐力リレー - チーム編成</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1, h2 {
+            color: #343a40;
+            text-align: center;
+        }
+        .constraints {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: inline-block;
+            width: 60px;
+        }
+        input, select {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0069d9;
+        }
+        #participantList {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #e9ecef;
+        }
+        .team {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .error {
+            color: #dc3545;
+            margin-top: 10px;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #f5c6cb;
+        }
+        .success {
+            color: #28a745;
+            margin-top: 10px;
+            background-color: #d4edda;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #c3e6cb;
+        }
+        .sample-buttons {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .sample-buttons button {
+            margin: 5px;
+        }
+        .stats {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        .failure-reason {
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .solution {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .strategy {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            border: 1px solid #bee5eb;
+        }
+        .balanced {
+            border-left: 5px solid #28a745;
+        }
+        .constrained {
+            border-left: 5px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="constraints">
+        <h3>チーム編成方針:</h3>
+        <p><strong>優先方針:</strong> できる限り、公平にチームを30代以下、40代、50代以上各一人で編成します。</p>
+        <h4>制約条件:</h4>
+        <ul>
+            <li>各チーム3人組</li>
+            <li>0~39歳は最大1人まで</li>
+            <li>0~49歳は最大2人まで</li>
+            <li>男性は最大2人まで</li>
+        </ul>
+    </div>
+
+    <div class="sample-buttons">
+        <button id="loadValidSample">有効なサンプルデータを読み込む</button>
+        <button id="loadBalancedSample">理想バランスデータ</button>
+        <button id="loadInvalidSample1">無効なサンプル1 (若すぎる)</button>
+        <button id="loadInvalidSample2">無効なサンプル2 (男性多すぎ)</button>
+    </div>
+
+    <h2>参加者登録</h2>
+
+    <div class="form-group">
+        <label for="name">名前:</label>
+        <input type="text" id="name" placeholder="氏名">
+    </div>
+
+    <div class="form-group">
+        <label for="ageGroup">年齢:</label>
+        <select id="ageGroup">
+            <option value="0-39">0~39歳</option>
+            <option value="40-49">40~49歳</option>
+            <option value="50+">50歳~</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="gender">性別:</label>
+        <select id="gender">
+            <option value="男性">男性</option>
+            <option value="女性">女性</option>
+        </select>
+    </div>
+
+    <button id="addParticipant">参加者を追加</button>
+
+    <div id="participantList">
+        <h3>参加者一覧</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>名前</th>
+                    <th>年齢</th>
+                    <th>性別</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="participantsTable">
+                <!-- Participants will be added here -->
+            </tbody>
+        </table>
+        <div id="participantStats" class="stats"></div>
+    </div>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <button id="generateTeams">チームをランダム編成</button>
+        <button id="clearAll">リセット</button>
+    </div>
+
+    <div id="result">
+        <h2>チーム編成結果</h2>
+        <div id="teams"></div>
+        <div id="message"></div>
+    </div>
+
+    <div class="footer">
+        <p>最終更新: 2025-05-16 01:39:07 by wenhua-chen</p>
+    </div>
+
+    <script>
+        let participants = [];
+
+        // Convert age group to representative age for internal calculations
+        function getAgeFromGroup(ageGroup) {
+            switch(ageGroup) {
+                case '0-39': return 30;  // representative age for 0-39 group
+                case '40-49': return 45; // representative age for 40-49 group
+                case '50+': return 60;   // representative age for 50+ group
+                default: return 30;
+            }
+        }
+
+        // Get display name for age group
+        function getAgeGroupDisplay(ageGroup) {
+            switch(ageGroup) {
+                case '0-39': return '0~39歳';
+                case '40-49': return '40~49歳';
+                case '50+': return '50歳~';
+                default: return ageGroup;
+            }
+        }
+
+        // Add a participant to the list
+        document.getElementById('addParticipant').addEventListener('click', function() {
+            const name = document.getElementById('name').value.trim();
+            const ageGroup = document.getElementById('ageGroup').value;
+            const gender = document.getElementById('gender').value;
+
+            if (!name) {
+                alert('名前を入力してください');
+                return;
+            }
+
+            const participant = {
+                name,
+                ageGroup,
+                age: getAgeFromGroup(ageGroup),  // store representative age for calculations
+                gender
+            };
+
+            participants.push(participant);
+            updateParticipantTable();
+
+            // Clear input fields
+            document.getElementById('name').value = '';
+            document.getElementById('ageGroup').selectedIndex = 0;
+            document.getElementById('gender').selectedIndex = 0;
+        });
+
+        // Display all participants in the table
+        function updateParticipantTable() {
+            const tbody = document.getElementById('participantsTable');
+            tbody.innerHTML = '';
+
+            participants.forEach((participant, index) => {
+                const row = document.createElement('tr');
+
+                const nameCell = document.createElement('td');
+                nameCell.textContent = participant.name;
+
+                const ageCell = document.createElement('td');
+                ageCell.textContent = getAgeGroupDisplay(participant.ageGroup);
+
+                const genderCell = document.createElement('td');
+                genderCell.textContent = participant.gender;
+
+                const actionCell = document.createElement('td');
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '削除';
+                deleteButton.style.backgroundColor = '#dc3545';
+                deleteButton.addEventListener('click', function() {
+                    participants.splice(index, 1);
+                    updateParticipantTable();
+                });
+
+                actionCell.appendChild(deleteButton);
+
+                row.appendChild(nameCell);
+                row.appendChild(ageCell);
+                row.appendChild(genderCell);
+                row.appendChild(actionCell);
+
+                tbody.appendChild(row);
+            });
+
+            // Update statistics
+            updateParticipantStats();
+        }
+
+        // Update participant statistics
+        function updateParticipantStats() {
+            const statsDiv = document.getElementById('participantStats');
+            if (participants.length === 0) {
+                statsDiv.innerHTML = '';
+                return;
+            }
+
+            const totalParticipants = participants.length;
+            const teamCount = Math.floor(totalParticipants / 3);
+
+            // Count by age group
+            const youngCount = participants.filter(p => p.ageGroup === '0-39').length;
+            const middleCount = participants.filter(p => p.ageGroup === '40-49').length;
+            const seniorCount = participants.filter(p => p.ageGroup === '50+').length;
+            const under50Count = youngCount + middleCount;
+            const maleCount = participants.filter(p => p.gender === '男性').length;
+
+            // Calculate ideal balanced distribution
+            const isBalancedPossible = youngCount >= teamCount && middleCount >= teamCount && seniorCount >= teamCount;
+
+            let warnings = [];
+            if (totalParticipants % 3 !== 0) {
+                warnings.push(`参加者数が3の倍数ではありません (${totalParticipants}人)`);
+            }
+
+            // Check for balance possibility
+            if (!isBalancedPossible && teamCount > 0) {
+                if (youngCount < teamCount) {
+                    warnings.push(`完全なバランス配置には0~39歳の参加者が足りません (${youngCount}人、${teamCount}人必要)`);
+                }
+                if (middleCount < teamCount) {
+                    warnings.push(`完全なバランス配置には40~49歳の参加者が足りません (${middleCount}人、${teamCount}人必要)`);
+                }
+                if (seniorCount < teamCount) {
+                    warnings.push(`完全なバランス配置には50歳以上の参加者が足りません (${seniorCount}人、${teamCount}人必要)`);
+                }
+            }
+
+            // Check original constraints
+            if (youngCount > teamCount) {
+                warnings.push(`0~39歳の参加者が多すぎます (${youngCount}人、チーム平均${(youngCount / teamCount).toFixed(1)}人)`);
+            }
+            if (under50Count > teamCount * 2) {
+                warnings.push(`0~49歳の参加者が多すぎます (${under50Count}人、チーム平均${(under50Count / teamCount).toFixed(1)}人)`);
+            }
+            if (maleCount > teamCount * 2) {
+                warnings.push(`男性の参加者が多すぎます (${maleCount}人、チーム平均${(maleCount / teamCount).toFixed(1)}人)`);
+            }
+
+            statsDiv.innerHTML = `
+                <h4>参加者の統計:</h4>
+                <p>総参加者数: ${totalParticipants}人 (${teamCount}チーム + ${totalParticipants % 3}人)</p>
+                <p>0~39歳: ${youngCount}人 (${Math.round(youngCount * 100 / totalParticipants)}%)</p>
+                <p>40~49歳: ${middleCount}人 (${Math.round(middleCount * 100 / totalParticipants)}%)</p>
+                <p>50歳~: ${seniorCount}人 (${Math.round(seniorCount * 100 / totalParticipants)}%)</p>
+                <p>男性: ${maleCount}人 (${Math.round(maleCount * 100 / totalParticipants)}%)</p>
+                ${isBalancedPossible ? '<p style="color: #28a745;"><strong>✓ 完全バランス配置が可能です</strong></p>' : ''}
+                ${warnings.length > 0 ? '<h4>警告:</h4><ul>' + warnings.map(w => `<li>${w}</li>`).join('') + '</ul>' : ''}
+            `;
+        }
+
+        // Generate random teams following the constraints
+        document.getElementById('generateTeams').addEventListener('click', function() {
+            if (participants.length === 0) {
+                alert('参加者を追加してください');
+                return;
+            }
+
+            if (participants.length % 3 !== 0) {
+                alert(`参加者の数が3の倍数である必要があります。現在: ${participants.length}人`);
+                return;
+            }
+
+            // First try to create perfectly balanced teams (one from each age group)
+            const balancedTeams = tryBalancedTeamFormation();
+            if (balancedTeams) {
+                displayTeams(balancedTeams, false, null, true);
+                return;
+            }
+
+            // If balanced formation failed, try with original constraints
+            const shuffled = [...participants].sort(() => Math.random() - 0.5);
+
+            // Try to generate valid teams
+            const maxAttempts = 1000;
+            let attempt = 0;
+            let validTeams = null;
+            let failureReason = null;
+
+            while (attempt < maxAttempts && !validTeams) {
+                // Shuffle again for each attempt
+                shuffled.sort(() => Math.random() - 0.5);
+
+                const teams = [];
+                let valid = true;
+                failureReason = null;
+
+                // Split into teams of 3
+                for (let i = 0; i < shuffled.length; i += 3) {
+                    if (i + 2 < shuffled.length) {
+                        const team = shuffled.slice(i, i + 3);
+
+                        // Check constraints for this team
+                        const youngCount = team.filter(p => p.ageGroup === '0-39').length;
+                        const under50Count = team.filter(p => p.ageGroup === '0-39' || p.ageGroup === '40-49').length;
+                        const maleCount = team.filter(p => p.gender === '男性').length;
+
+                        if (youngCount > 1 || under50Count > 2 || maleCount > 2) {
+                            valid = false;
+
+                            // Save detailed failure reason
+                            if (youngCount > 1) {
+                                failureReason = {
+                                    constraint: '0~39歳',
+                                    limit: 1,
+                                    actual: youngCount,
+                                    team: team,
+                                    members: team.filter(p => p.ageGroup === '0-39').map(p => p.name).join(', ')
+                                };
+                            } else if (under50Count > 2) {
+                                failureReason = {
+                                    constraint: '0~49歳',
+                                    limit: 2,
+                                    actual: under50Count,
+                                    team: team,
+                                    members: team.filter(p => p.ageGroup === '0-39' || p.ageGroup === '40-49').map(p => p.name).join(', ')
+                                };
+                            } else if (maleCount > 2) {
+                                failureReason = {
+                                    constraint: '男性',
+                                    limit: 2,
+                                    actual: maleCount,
+                                    team: team,
+                                    members: team.filter(p => p.gender === '男性').map(p => p.name).join(', ')
+                                };
+                            }
+
+                            break;
+                        }
+
+                        teams.push(team);
+                    }
+                }
+
+                if (valid) {
+                    validTeams = teams;
+                }
+
+                attempt++;
+            }
+
+            displayTeams(validTeams, attempt >= maxAttempts, failureReason, false);
+        });
+
+        // Try to form teams with exactly one person from each age group
+        function tryBalancedTeamFormation() {
+            const young = participants.filter(p => p.ageGroup === '0-39');
+            const middle = participants.filter(p => p.ageGroup === '40-49');
+            const senior = participants.filter(p => p.ageGroup === '50+');
+
+            const teamCount = Math.floor(participants.length / 3);
+
+            // Check if we have enough people in each age group
+            if (young.length < teamCount || middle.length < teamCount || senior.length < teamCount) {
+                return null; // Can't form perfectly balanced teams
+            }
+
+            // Shuffle each age group
+            young.sort(() => Math.random() - 0.5);
+            middle.sort(() => Math.random() - 0.5);
+            senior.sort(() => Math.random() - 0.5);
+
+            const teams = [];
+            const maxAttempts = 1000;
+
+            let attempt = 0;
+            let validTeams = null;
+
+            while (attempt < maxAttempts && !validTeams) {
+                // Reshuffle for each attempt
+                young.sort(() => Math.random() - 0.5);
+                middle.sort(() => Math.random() - 0.5);
+                senior.sort(() => Math.random() - 0.5);
+
+                const tempTeams = [];
+                let valid = true;
+
+                // Form teams with one from each age group
+                for (let i = 0; i < teamCount; i++) {
+                    const team = [young[i], middle[i], senior[i]];
+
+                    // Check male constraint
+                    const maleCount = team.filter(p => p.gender === '男性').length;
+                    if (maleCount > 2) {
+                        valid = false;
+                        break;
+                    }
+
+                    tempTeams.push(team);
+                }
+
+                if (valid) {
+                    validTeams = tempTeams;
+                    break;
+                }
+
+                attempt++;
+            }
+
+            // If we couldn't form valid balanced teams with male constraint
+            if (!validTeams) {
+                return null;
+            }
+
+            // Add remaining participants if any (should be 0 or 1 or 2)
+            const usedParticipants = new Set(validTeams.flat().map(p => p.name));
+            const remaining = participants.filter(p => !usedParticipants.has(p.name));
+
+            if (remaining.length > 0) {
+                validTeams.push(remaining);
+            }
+
+            return validTeams;
+        }
+
+        // Display the generated teams or error message
+        function displayTeams(teams, failedToGenerate, failureReason, isBalancedTeam) {
+            const teamsDiv = document.getElementById('teams');
+            const messageDiv = document.getElementById('message');
+            teamsDiv.innerHTML = '';
+            messageDiv.innerHTML = '';
+
+            if (failedToGenerate) {
+                // Count total constraints
+                const totalParticipants = participants.length;
+                const teamCount = totalParticipants / 3;
+                const youngCount = participants.filter(p => p.ageGroup === '0-39').length;
+                const middleCount = participants.filter(p => p.ageGroup === '40-49').length;
+                const seniorCount = participants.filter(p => p.ageGroup === '50+').length;
+                const under50Count = youngCount + middleCount;
+                const maleCount = participants.filter(p => p.gender === '男性').length;
+
+                let errorMsg = '<div class="error"><h3>制約を満たすチーム編成ができませんでした</h3>';
+
+                // If we have specific failure information
+                if (failureReason) {
+                    errorMsg += `<p class="failure-reason">今回の編成失敗の原因:</p>
+                    <p>あるチームで「${failureReason.constraint}」の制限（最大${failureReason.limit}人）を超える${failureReason.actual}人が同じチームになってしまいました。</p>
+                    <p>具体的な問題のメンバー: ${failureReason.members}</p>`;
+
+                    // Add structural issue explanation
+                    if (failureReason.constraint === '0~39歳' && youngCount > teamCount) {
+                        const excess = youngCount - teamCount;
+                        errorMsg += `<p class="solution"><strong>根本的な問題:</strong> 0~39歳の参加者が${youngCount}人いますが、${teamCount}チームで各チーム最大1人までなので、少なくとも${excess}人の0~39歳の参加者を減らすか、他の年齢層の参加者を追加する必要があります。</p>`;
+                    } else if (failureReason.constraint === '0~49歳' && under50Count > teamCount * 2) {
+                        const excess = under50Count - (teamCount * 2);
+                        errorMsg += `<p class="solution"><strong>根本的な問題:</strong> 0~49歳の参加者が${under50Count}人いますが、${teamCount}チームで各チーム最大2人までなので、少なくとも${excess}人の0~49歳の参加者を減らすか、50歳以上の参加者を追加する必要があります。</p>`;
+                    } else if (failureReason.constraint === '男性' && maleCount > teamCount * 2) {
+                        const excess = maleCount - (teamCount * 2);
+                        errorMsg += `<p class="solution"><strong>根本的な問題:</strong> 男性の参加者が${maleCount}人いますが、${teamCount}チームで各チーム最大2人までなので、少なくとも${excess}人の男性参加者を減らすか、女性参加者を追加する必要があります。</p>`;
+                    }
+                } else {
+                    // If no specific failure reason was found after maximum attempts
+                    errorMsg += `<p>1000回試行しましたが、制約を満たすチーム編成を見つけられませんでした。以下の条件に問題がある可能性があります：</p><ul>`;
+
+                    // Check for balance possibility
+                    if (youngCount < teamCount) {
+                        errorMsg += `<li>完全なバランスには0~39歳の参加者が足りません (${youngCount}人、${teamCount}人必要)</li>`;
+                    }
+                    if (middleCount < teamCount) {
+                        errorMsg += `<li>完全なバランスには40~49歳の参加者が足りません (${middleCount}人、${teamCount}人必要)</li>`;
+                    }
+                    if (seniorCount < teamCount) {
+                        errorMsg += `<li>完全なバランスには50歳以上の参加者が足りません (${seniorCount}人、${teamCount}人必要)</li>`;
+                    }
+
+                    if (youngCount > teamCount) {
+                        errorMsg += `<li>0~39歳の参加者が多すぎます (${youngCount}人、各チーム最大1人なので最大${teamCount}人まで)</li>`;
+                    }
+
+                    if (under50Count > teamCount * 2) {
+                        errorMsg += `<li>0~49歳の参加者が多すぎます (${under50Count}人、各チーム最大2人なので最大${teamCount * 2}人まで)</li>`;
+                    }
+
+                    if (maleCount > teamCount * 2) {
+                        errorMsg += `<li>男性の参加者が多すぎます (${maleCount}人、各チーム最大2人なので最大${teamCount * 2}人まで)</li>`;
+                    }
+
+                    if (!youngCount > teamCount && !under50Count > teamCount * 2 && !maleCount > teamCount * 2) {
+                        errorMsg += `<li>参加者の分布に問題があります。制約を満たす分配方法が見つかりませんでした。</li>`;
+                    }
+
+                    errorMsg += '</ul>';
+                }
+
+                errorMsg += '</div>';
+                messageDiv.innerHTML = errorMsg;
+                return;
+            }
+
+            if (!teams || teams.length === 0) {
+                messageDiv.innerHTML = '<p class="error">チーム編成に問題が発生しました。</p>';
+                return;
+            }
+
+            // Show which strategy was used
+            if (isBalancedTeam) {
+                messageDiv.innerHTML = `
+                    <div class="strategy balanced">
+                        <h4>✓ 理想的なバランス配置を実現！</h4>
+                        <p>各チームに0~39歳・40~49歳・50歳以上の参加者が一人ずつ入った理想的な編成ができました。</p>
+                    </div>
+                    <p class="success">チーム編成が完了しました！</p>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="strategy constrained">
+                        <h4>○ 制約条件に従った編成</h4>
+                        <p>理想的な年齢バランス（各年齢層一人ずつ）での編成はできませんでしたが、制約条件を満たすチーム編成ができました。</p>
+                    </div>
+                    <p class="success">チーム編成が完了しました！</p>
+                `;
+            }
+
+            teams.forEach((team, index) => {
+                const teamDiv = document.createElement('div');
+                teamDiv.className = 'team';
+                teamDiv.innerHTML = `<h3>チーム ${index + 1}</h3>`;
+
+                const table = document.createElement('table');
+                const thead = document.createElement('thead');
+                thead.innerHTML = '<tr><th>名前</th><th>年齢</th><th>性別</th></tr>';
+                table.appendChild(thead);
+
+                const tbody = document.createElement('tbody');
+
+                let youngCount = 0;
+                let middleCount = 0;
+                let seniorCount = 0;
+                let under50Count = 0;
+                let maleCount = 0;
+
+                team.forEach(member => {
+                    const row = document.createElement('tr');
+
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = member.name;
+
+                    const ageCell = document.createElement('td');
+                    ageCell.textContent = getAgeGroupDisplay(member.ageGroup);
+
+                    const genderCell = document.createElement('td');
+                    genderCell.textContent = member.gender;
+
+                    row.appendChild(nameCell);
+                    row.appendChild(ageCell);
+                    row.appendChild(genderCell);
+
+                    tbody.appendChild(row);
+
+                    if (member.ageGroup === '0-39') youngCount++;
+                    if (member.ageGroup === '40-49') middleCount++;
+                    if (member.ageGroup === '50+') seniorCount++;
+                    if (member.ageGroup === '0-39' || member.ageGroup === '40-49') under50Count++;
+                    if (member.gender === '男性') maleCount++;
+                });
+
+                table.appendChild(tbody);
+                teamDiv.appendChild(table);
+
+                // Add info about constraints for this team
+                const constraints = document.createElement('div');
+
+                // Show different team composition info based on formation strategy
+                if (isBalancedTeam) {
+                    constraints.innerHTML = `
+                        <p><strong>チーム構成:</strong>
+                        0~39歳: ${youngCount}/1,
+                        40~49歳: ${middleCount}/1,
+                        50歳~: ${seniorCount}/1,
+                        男性: ${maleCount}/2</p>
+                    `;
+                } else {
+                    constraints.innerHTML = `
+                        <p><strong>制約:</strong>
+                        0~39歳: ${youngCount}/1,
+                        0~49歳: ${under50Count}/2,
+                        男性: ${maleCount}/2</p>
+                    `;
+                }
+
+                teamDiv.appendChild(constraints);
+
+                teamsDiv.appendChild(teamDiv);
+            });
+        }
+
+        // Clear all data
+        document.getElementById('clearAll').addEventListener('click', function() {
+            participants = [];
+            updateParticipantTable();
+            document.getElementById('teams').innerHTML = '';
+            document.getElementById('message').innerHTML = '';
+        });
+
+        // Load sample data - Valid case
+        document.getElementById('loadValidSample').addEventListener('click', function() {
+            participants = [
+                { name: "山田太郎", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "鈴木花子", ageGroup: "40-49", age: 45, gender: "女性" },
+                { name: "佐藤健", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "田中美咲", ageGroup: "50+", age: 60, gender: "女性" },
+                { name: "伊藤誠", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "渡辺愛", ageGroup: "40-49", age: 45, gender: "女性" },
+                { name: "高橋和也", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "小林咲", ageGroup: "50+", age: 60, gender: "女性" },
+                { name: "加藤大輔", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "吉田真由美", ageGroup: "50+", age: 60, gender: "女性" },
+                { name: "中村拓也", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "山本静香", ageGroup: "40-49", age: 45, gender: "女性" }
+            ];
+            updateParticipantTable();
+        });
+
+        // Load sample data - Perfect balanced distribution
+        document.getElementById('loadBalancedSample').addEventListener('click', function() {
+            participants = [
+                { name: "山田太郎", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "鈴木花子", ageGroup: "40-49", age: 45, gender: "女性" },
+                { name: "佐藤健", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "田中美咲", ageGroup: "0-39", age: 30, gender: "女性" },
+                { name: "伊藤誠", ageGroup: "40-49", age: 45, gender: "男性" },
+                { name: "渡辺愛", ageGroup: "50+", age: 60, gender: "女性" },
+                { name: "高橋和也", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "小林咲", ageGroup: "40-49", age: 45, gender: "女性" },
+                { name: "加藤大輔", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "吉田真由美", ageGroup: "0-39", age: 30, gender: "女性" },
+                { name: "中村拓也", ageGroup: "40-49", age: 45, gender: "男性" },
+                { name: "山本静香", ageGroup: "50+", age: 60, gender: "女性" }
+            ];
+            updateParticipantTable();
+        });
+
+        // Load sample data - Too many young people
+        document.getElementById('loadInvalidSample1').addEventListener('click', function() {
+            participants = [
+                { name: "山田太郎", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "鈴木花子", ageGroup: "0-39", age: 30, gender: "女性" },
+                { name: "佐藤健", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "田中美咲", ageGroup: "0-39", age: 30, gender: "女性" },
+                { name: "伊藤誠", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "渡辺愛", ageGroup: "0-39", age: 30, gender: "女性" },
+                { name: "高橋和也", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "小林咲", ageGroup: "50+", age: 60, gender: "女性" },
+                { name: "加藤大輔", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "吉田真由美", ageGroup: "50+", age: 60, gender: "女性" },
+                { name: "中村拓也", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "山本静香", ageGroup: "40-49", age: 45, gender: "女性" }
+            ];
+            updateParticipantTable();
+        });
+
+        // Load sample data - Too many males
+        document.getElementById('loadInvalidSample2').addEventListener('click', function() {
+            participants = [
+                { name: "山田太郎", ageGroup: "40-49", age: 45, gender: "男性" },
+                { name: "鈴木一郎", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "佐藤健", ageGroup: "0-39", age: 30, gender: "男性" },
+                { name: "田中誠", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "伊藤拓", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "渡辺和也", ageGroup: "50+", age: 60, gender: "男性" },
+                { name: "高橋大輔", ageGroup: "40-49", age: 45, gender: "男性" },
+                { name: "小林咲", ageGroup: "40-49", age: 45, gender: "女性" },
+                { name: "吉田真由美", ageGroup: "50+", age: 60, gender: "女性" },
+                { name: "山本静香", ageGroup: "40-49", age: 45, gender: "女性" },
+                { name: "中村美咲", ageGroup: "50+", age: 60, gender: "女性" },
+                { name: "加藤愛", ageGroup: "50+", age: 60, gender: "女性" }
+            ];
+            updateParticipantTable();
+        });
+    </script>
+</body>
+</html>
